@@ -3,7 +3,6 @@ package view;
 import com.thoughtworks.xstream.XStream;
 import model.Cidade;
 import model.Previsao;
-import model.XMLReader;
 import model.hashMap;
 import model.service.WeatherForecastService;
 
@@ -15,14 +14,14 @@ public class ClientConnection {
     private String previsao = "";
 
     XStream xstream = new XStream();
-    XMLReader xml = new XMLReader();
 
     public void setCityId(Integer cityId){
         this.cityId = cityId;
     }
 
     public void setCityName(String cityName) {
-        this.cityName = cityName;
+        this.cityName = cityName.replaceAll(" ","%20");
+        System.out.println(this.cityName);
     }
     public void getPrevisao(){
         Cidade c = (Cidade) xstream.fromXML(previsao);
@@ -35,12 +34,23 @@ public class ClientConnection {
             System.out.printf("Dia %s\nMinima %s\nMaxima %s\nTempo %s\n", p.getDia(), p.getMinima(), p.getMaxima(), p.getTempo());
         }
     }
+    public void searchName(){
+        try{
+            String cidade = WeatherForecastService.searchCity(cityName);
+            System.out.println(cidade);
+
+
+        }catch(IOException e) {
+            System.out.println("Erro ao consultar API de clima.");
+            e.printStackTrace();
+        }
+
+    }
 
     public void getSevenDays(){
         try{
             this.previsao = WeatherForecastService.sevenDaysWeatherForecast(cityId);
             System.out.println(previsao);
-            //xml.searchIdXMLReader(cityId);
             xstream.aliasAttribute("previsao", "tempo");
             // Ajuste de segurança do XStream
             Class<?>[] classes = new Class[]{Cidade.class, Previsao.class};
@@ -56,15 +66,5 @@ public class ClientConnection {
             e.printStackTrace();
         }
     }
-    public void searchName(){
-        try{
-            String cidade = WeatherForecastService.searchCity(cityName);
-            System.out.println(cidade);
-            //xml.searchCityXMLReader(cityName);
-        }catch(IOException e) {
-            System.out.println("Erro ao consultar API de clima.");
-            e.printStackTrace();
-        }
 
-    }
 }

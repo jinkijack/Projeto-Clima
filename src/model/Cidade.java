@@ -7,7 +7,7 @@ public class Cidade {
 	private String nome;
 	private String uf;
 	private String atualizacao;
-	
+
 	private List<Previsao> previsoes = new ArrayList<Previsao>();
 	
 	public String getNome() {
@@ -31,7 +31,9 @@ public class Cidade {
 	public List<Previsao> getPrevisoes() {
 		return previsoes;
 	}
+
 	public void setPrevisoes(List<Previsao> previsoes) {
 		this.previsoes = previsoes;
 	}
+
 }
